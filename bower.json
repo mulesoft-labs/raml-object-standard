@@ -1,0 +1,19 @@
+{
+  "name": "raml-object-standard",
+  "version": "0.0.0",
+  "homepage": "https://github.com/mulesoft-labs/raml-object-standard",
+  "authors": [
+    "MuleSoft, Inc."
+  ],
+  "description": "",
+  "main": "raml-object-standard.js",
+  "keywords": [],
+  "license": "Apache-2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

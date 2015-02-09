@@ -1,0 +1,47 @@
+{
+  "name": "raml-object-standard",
+  "version": "0.0.0",
+  "description": "",
+  "main": "raml-object-standard.js",
+  "files": [
+    "raml-object-standard.js",
+    "{bin,lib,transform}/**",
+    "LICENSE"
+  ],
+  "scripts": {
+    "lint": "standard",
+    "test-std": "mocha test/**/*.js -R spec --bail",
+    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha test/**/*.js -- -R spec --bail",
+    "test": "npm run lint && npm run test-cov"
+  },
+  "standard": {
+    "ignore": [
+      "coverage/**",
+      "node_modules/**",
+      "bower_components/**"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mulesoft-labs/raml-object-standard.git"
+  },
+  "keywords": [],
+  "author": "MuleSoft, Inc.",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/mulesoft-labs/raml-object-standard/issues"
+  },
+  "homepage": "https://github.com/mulesoft-labs/raml-object-standard",
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "istanbul": "^0.3.5",
+    "mocha": "^2.1.0",
+    "pre-commit": "^1.0.1",
+    "raml-parser": "^0.8.10",
+    "standard": "^2.1.1",
+    "tv4": "^1.1.9"
+  },
+  "dependencies": {
+    "extend": "^2.0.0"
+  }
+}

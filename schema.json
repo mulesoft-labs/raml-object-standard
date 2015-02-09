@@ -1,0 +1,612 @@
+{
+  "title": "A JSON schema for a standard RAML object",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": [
+    "title"
+  ],
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "baseUri": {
+      "type": "string",
+      "format": "uri"
+    },
+    "baseUriParameters": {
+      "$ref": "#/definitions/namedParameters"
+    },
+    "mediaType": {
+      "$ref": "#/definitions/mediaType"
+    },
+    "protocols": {
+      "$ref": "#/definitions/protocols"
+    },
+    "securitySchemes": {
+      "$ref": "#/definitions/securitySchemes"
+    },
+    "securedBy": {
+      "$ref": "#/definitions/securedBy"
+    },
+    "documentation": {
+      "$ref": "#/definitions/documentation"
+    },
+    "resources": {
+      "$ref": "#/definitions/resources"
+    },
+    "traits": {
+      "$ref": "#/definitions/traits"
+    },
+    "resourceTypes": {
+      "$ref": "#/definitions/resourceTypes"
+    }
+  },
+  "definitions": {
+    "namedParameters": {
+      "patternProperties": {
+        "^[\\w-]+$": {
+          "$ref": "#/definitions/namedParameter"
+        }
+      }
+    },
+    "namedParameter": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/namedParameterOptions"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/namedParameterOptions"
+          }
+        }
+      ]
+    },
+    "namedParameterOptions": {
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "string",
+            "number",
+            "integer",
+            "date",
+            "boolean",
+            "file"
+          ],
+          "default": "string"
+        },
+        "enum": {
+          "$ref": "#/definitions/enum"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "minLength": {
+          "$ref": "#/definitions/minIntegerDefault0"
+        },
+        "maxLength": {
+          "$ref": "#/definitions/minInteger"
+        },
+        "minimum": {
+          "type": "number"
+        },
+        "maximum": {
+          "type": "number"
+        },
+        "example": {
+          "$ref": "#/definitions/primitiveType"
+        },
+        "repeat": {
+          "type": "boolean"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "default": {
+          "$ref": "#/definitions/primitiveType"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "type": {
+              "enum": ["string"]
+            },
+            "pattern": {
+              "type": "string",
+              "format": "regex"
+            },
+            "example": {
+              "type": "string"
+            },
+            "default": {
+              "type": "string"
+            },
+            "enum": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        {
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "enum": ["number"]
+            },
+            "example": {
+              "type": "number"
+            },
+            "default": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "enum": ["integer"]
+            },
+            "minimum": {
+              "type": "integer"
+            },
+            "maximum": {
+              "type": "integer"
+            },
+            "example": {
+              "type": "integer"
+            },
+            "default": {
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "enum": ["date"]
+            },
+            "example": {
+              "$ref": "#/definitions/date"
+            },
+            "default": {
+              "$ref": "#/definitions/date"
+            }
+          }
+        },
+        {
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "enum": ["boolean"]
+            },
+            "example": {
+              "type": "boolean"
+            },
+            "default": {
+              "type": "boolean"
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "mediaType": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9!#$%^&\\*_\\-\\+{}\\|'.`~]+/[a-zA-Z0-9!#$%^&\\*_\\-\\+{}\\|'.`~]+$"
+    },
+    "protocols": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": ["HTTP", "HTTPS"]
+      },
+      "uniqueItems": true
+    },
+    "securitySchemes": {
+      "type": "object",
+      "patternProperties": {
+        "^[\\w-]+$": {
+          "$ref": "#/definitions/securityScheme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "securityScheme": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "describedBy": {
+          "$ref": "#/definitions/describedBy"
+        },
+        "settings": {
+          "type": "object"
+        }
+      },
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "enum": ["OAuth 1.0"]
+            },
+            "settings": {
+              "type": "object",
+              "required": [
+                "requestTokenUri",
+                "authorizationUri",
+                "tokenCredentialsUri"
+              ],
+              "properties": {
+                "requestTokenUri": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "authorizationUri": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "tokenCredentialsUri": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "enum": ["OAuth 2.0"]
+            },
+            "settings": {
+              "type": "object",
+              "required": [
+                "authorizationUri",
+                "accessTokenUri",
+                "authorizationGrants"
+              ],
+              "properties": {
+                "authorizationUri": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "accessTokenUri": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "authorizationGrants": {
+                  "type": "array",
+                  "items": {
+                    "enum": ["code", "token", "owner", "credentials"]
+                  }
+                },
+                "scopes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "enum": ["Basic Authentication"]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "enum": ["Digest Authentication"]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "pattern": "^x-"
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "traits": {
+      "type": "object",
+      "patternProperties": {
+        "^[\\w-]+$": {
+          "$ref": "#/definitions/trait"
+        }
+      },
+      "additionalProperties": false
+    },
+    "describedBy": {
+      "type": "object",
+      "properties": {
+        "queryParameters": {
+          "$ref": "#/definitions/namedParameters"
+        },
+        "headers": {
+          "$ref": "#/definitions/namedParameters"
+        },
+        "responses": {
+          "$ref": "#/definitions/responses"
+        },
+        "body": {
+          "$ref": "#/definitions/body"
+        }
+      }
+    },
+    "trait": {
+      "$ref": "#/definitions/describedBy",
+      "properties": {
+        "securedBy": {
+          "$ref": "#/definitions/securedBy"
+        }
+      }
+    },
+    "resourceTypes": {
+      "type": "object",
+      "patternProperties": {
+        "^[\\w-]+$": {
+          "$ref": "#/definitions/resourceType"
+        }
+      }
+    },
+    "resourceType": {
+      "$ref": "#/definitions/resource",
+      "patternProperties": {
+        "^(head|get|post|put|patch|delete|options|trace|connect)\\??$": {
+          "$ref": "#/definitions/method"
+        }
+      },
+      "additionalProperties": false
+    },
+    "body": {
+      "type": "object",
+      "properties": {
+        "application/x-www-form-urlencoded": {
+          "$ref": "#/definitions/formBody"
+        },
+        "multipart/form-data": {
+          "$ref": "#/definitions/formBody"
+        },
+        "application/json": {
+          "$ref": "#/definitions/schemaBody"
+        },
+        "text/xml": {
+          "$ref": "#/definitions/schemaBody"
+        }
+      },
+      "patternProperties": {
+        "^[a-zA-Z0-9!#$%^&\\*_\\-\\+{}\\|'.`~]+/[a-zA-Z0-9!#$%^&\\*_\\-\\+{}\\|'.`~]+$": {
+          "$ref": "#/definitions/responseBody"
+        }
+      },
+      "additionalProperties": false
+    },
+    "formBody": {
+      "$ref": "#/definitions/responseBody",
+      "properties": {
+        "formParameters": {
+          "$ref": "#/definitions/namedParameters"
+        }
+      },
+      "additionalProperties": false
+    },
+    "schemaBody": {
+      "$ref": "#/definitions/responseBody",
+      "properties": {
+        "schema": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "responseBody": {
+      "type": "object",
+      "properties": {
+        "example": {
+          "type": "string"
+        }
+      }
+    },
+    "responses": {
+      "type": "object",
+      "patternProperties": {
+        "^\\d{3}$": {
+          "$ref": "#/definitions/response"
+        }
+      },
+      "additionalProperties": false
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "headers": {
+          "$ref": "#/definitions/namedParameters"
+        },
+        "body": {
+          "$ref": "#/definitions/body"
+        }
+      },
+      "additionalProperties": false
+    },
+    "securedBy": {
+      "type": "object",
+      "properties": {
+        "schemes": {
+          "type": "array",
+          "items": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        },
+        "settings": {
+          "type": "object",
+          "patternProperties": {
+            "^[\\w-]+$": {
+              "type": "object"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "documentation": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "resources": {
+      "type": "object",
+      "properties": {
+        "uriParameters": {
+          "$ref": "#/definitions/namedParameters"
+        },
+        "is": {
+          "$ref": "#/definitions/is"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "patternProperties": {
+        "^\\/": {
+          "$ref": "#/definitions/resources"
+        },
+        "^head|get|post|put|patch|delete|options|trace|connect$": {
+          "$ref": "#/definitions/method"
+        }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "properties": {
+        "is": {
+          "$ref": "#/definitions/is"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "patternProperties": {
+        "^head|get|post|put|patch|delete|options|trace|connect$": {
+          "$ref": "#/definitions/method"
+        }
+      },
+      "additionalProperties": false
+    },
+    "method": {
+      "$ref": "#/definitions/trait",
+      "properties": {
+        "is": {
+          "$ref": "#/definitions/is"
+        }
+      },
+      "additionalProperties": false
+    },
+    "is": {
+      "$ref": "#/definitions/enum",
+      "items": {
+        "type": "string"
+      }
+    },
+    "enum": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "minInteger": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "minIntegerDefault0": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/minInteger"
+        },
+        {
+          "default": 0
+        }
+      ]
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^(Sun|Mon|Tue|Wed|Thu|Fri|Sat), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$"
+    },
+    "primitiveType": {
+      "type": ["boolean", "integer", "null", "number", "string"]
+    }
+  },
+  "additionalProperties": false
+}
