@@ -1,6 +1,6 @@
 {
   "name": "raml-object-standard",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "raml-object-standard.js",
   "files": [
