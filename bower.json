@@ -5,9 +5,13 @@
   "authors": [
     "MuleSoft, Inc."
   ],
-  "description": "",
-  "main": "raml-object-standard.js",
-  "keywords": [],
+  "description": "A standardized RAML object representation using JSON",
+  "keywords": [
+    "raml",
+    "object",
+    "json",
+    "standard"
+  ],
   "license": "Apache-2.0",
   "ignore": [
     "**/.*",

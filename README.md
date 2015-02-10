@@ -5,7 +5,7 @@
 [![Build status][travis-image]][travis-url]
 [![Test coverage][coveralls-image]][coveralls-url]
 
-Create a standard RAML object representation using JSON.
+A standardized RAML object representation using JSON.
 
 ## Installation
 
@@ -15,10 +15,8 @@ npm install raml-object-standard --save
 
 ## Usage
 
-1. Use the `schema.json` to validate your output is standard
-2. Use a transform from the `transform` directory that works with your parser
-
-## Contributing
+1. Use the `schema.json` to validate your parser is standard
+2. Use a transform from the `transform` directory that works with an existing parser
 
 ## License
 

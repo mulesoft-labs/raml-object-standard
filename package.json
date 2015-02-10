@@ -1,11 +1,11 @@
 {
   "name": "raml-object-standard",
   "version": "0.0.1",
-  "description": "",
-  "main": "raml-object-standard.js",
+  "description": "A standardized RAML object representation using JSON",
   "files": [
-    "raml-object-standard.js",
-    "{bin,lib,transform}/**",
+    "schema.json",
+    "bin/",
+    "transform/",
     "LICENSE"
   ],
   "scripts": {
@@ -25,7 +25,12 @@
     "type": "git",
     "url": "git://github.com/mulesoft-labs/raml-object-standard.git"
   },
-  "keywords": [],
+  "keywords": [
+    "raml",
+    "object",
+    "json",
+    "standard"
+  ],
   "author": "MuleSoft, Inc.",
   "license": "Apache-2.0",
   "bugs": {
