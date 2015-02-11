@@ -2,6 +2,7 @@
   "name": "raml-object-standard",
   "version": "0.0.2",
   "homepage": "https://github.com/mulesoft-labs/raml-object-standard",
+  "main": "raml-object-standard.js",
   "authors": [
     "MuleSoft, Inc."
   ],
