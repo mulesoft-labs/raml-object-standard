@@ -7,6 +7,8 @@ var transform = require('../transform/raml-js-parser-08')
 
 describe('transform raml js parser 0.8', function () {
   it('should parse and transform raml into standard object', function () {
+    this.timeout(5 * 60 * 1000)
+
     return parser.loadFile(join(__dirname, 'fixtures/github_v3/api.raml'))
       .then(function (data) {
         var raml = transform(data)

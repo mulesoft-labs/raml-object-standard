@@ -42,7 +42,7 @@ describe('json schema', function () {
         title: 'Example',
         resources: {
           '/users': {
-            'unknown': {}
+            unknown: {}
           }
         }
       })
@@ -94,6 +94,37 @@ describe('json schema', function () {
           zone: {
             type: 'string',
             unknown: true
+          }
+        }
+      })
+
+      expect(result.valid).to.be.false
+    })
+  })
+
+  describe('resource types', function () {
+    it('should validate resource types', function () {
+      var result = validate({
+        title: 'Example',
+        resourceTypes: {
+          collection: {
+            is: ['paged'],
+            get: {},
+            'post?': {}
+          }
+        }
+      })
+
+      expect(result.valid).to.be.true
+    })
+
+    it('should be invalid with unknown methods', function () {
+      var result = validate({
+        title: 'Example',
+        resourceTypes: {
+          collection: {
+            is: ['paged'],
+            unknown: {}
           }
         }
       })

@@ -35,7 +35,7 @@
       "$ref": "#/definitions/documentation"
     },
     "resources": {
-      "$ref": "#/definitions/resources"
+      "$ref": "#/definitions/rootResource"
     },
     "traits": {
       "$ref": "#/definitions/traits"
@@ -63,7 +63,7 @@
       }
     },
     "namedParameter": {
-      "type": "object",
+      "type": ["null", "object"],
       "properties": {
         "displayName": {
           "type": "string"
@@ -237,30 +237,19 @@
           ],
           "properties": {
             "type": {
-              "enum": ["Basic Authentication"]
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "type"
-          ],
-          "properties": {
-            "type": {
-              "enum": ["Digest Authentication"]
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "type"
-          ],
-          "properties": {
-            "type": {
-              "type": "string",
-              "pattern": "^x-"
+              "oneOf": [
+                {
+                  "enum": [
+                    "Anonymous",
+                    "Basic Authentication",
+                    "Digest Authentication"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "pattern": "^x-"
+                }
+              ]
             }
           }
         }
@@ -310,7 +299,15 @@
       }
     },
     "resourceType": {
-      "$ref": "#/definitions/resource",
+      "type": "object",
+      "properties": {
+        "is": {
+          "$ref": "#/definitions/is"
+        },
+        "type": {
+          "$ref": "#/definitions/reference"
+        }
+      },
       "patternProperties": {
         "^(head|get|post|put|patch|delete|options|trace|connect)\\??$": {
           "$ref": "#/definitions/method"
@@ -417,7 +414,7 @@
       "additionalProperties": false
     },
     "securedBy": {
-      "type": "array",
+      "$ref": "#/definitions/enum",
       "items": {
         "oneOf": [
           {
@@ -462,7 +459,16 @@
         "additionalProperties": false
       }
     },
-    "resources": {
+    "rootResource": {
+      "type": "object",
+      "patternProperties": {
+        "^\\/": {
+          "$ref": "#/definitions/resource"
+        }
+      },
+      "additionalProperties": false
+    },
+    "resource": {
       "type": "object",
       "properties": {
         "uriParameters": {
@@ -476,28 +482,11 @@
         }
       },
       "patternProperties": {
+        "^head|get|post|put|patch|delete|options|trace|connect$": {
+          "$ref": "#/definitions/method"
+        },
         "^\\/": {
-          "$ref": "#/definitions/resources"
-        },
-        "^head|get|post|put|patch|delete|options|trace|connect$": {
-          "$ref": "#/definitions/method"
-        }
-      },
-      "additionalProperties": false
-    },
-    "resource": {
-      "type": "object",
-      "properties": {
-        "is": {
-          "$ref": "#/definitions/is"
-        },
-        "type": {
-          "type": "string"
-        }
-      },
-      "patternProperties": {
-        "^head|get|post|put|patch|delete|options|trace|connect$": {
-          "$ref": "#/definitions/method"
+          "$ref": "#/definitions/resource"
         }
       },
       "additionalProperties": false
@@ -510,17 +499,6 @@
         }
       },
       "additionalProperties": false
-    },
-    "requiredMediaType": {
-      "type": "object",
-      "required": [
-        "mediaType"
-      ],
-      "properties": {
-        "mediaType": {
-          "$ref": "#/definitions/mediaType"
-        }
-      }
     },
     "is": {
       "$ref": "#/definitions/enum",
