@@ -48,24 +48,21 @@
     "namedParameters": {
       "patternProperties": {
         "^[\\w-]+$": {
-          "$ref": "#/definitions/namedParameter"
+          "oneOf": [
+            {
+              "$ref": "#/definitions/namedParameter"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/namedParameter"
+              }
+            }
+          ]
         }
       }
     },
     "namedParameter": {
-      "oneOf": [
-        {
-          "$ref": "#/definitions/namedParameterOptions"
-        },
-        {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/namedParameterOptions"
-          }
-        }
-      ]
-    },
-    "namedParameterOptions": {
       "type": "object",
       "properties": {
         "displayName": {
@@ -90,7 +87,8 @@
           "$ref": "#/definitions/enum"
         },
         "pattern": {
-          "type": "string"
+          "type": "string",
+          "format": "regex"
         },
         "minLength": {
           "$ref": "#/definitions/minIntegerDefault0"
@@ -108,110 +106,15 @@
           "$ref": "#/definitions/primitiveType"
         },
         "repeat": {
-          "type": "boolean"
+          "$ref": "#/definitions/booleanDefaultFalse"
         },
         "required": {
-          "type": "boolean"
+          "$ref": "#/definitions/booleanDefaultFalse"
         },
         "default": {
           "$ref": "#/definitions/primitiveType"
         }
       },
-      "oneOf": [
-        {
-          "properties": {
-            "type": {
-              "enum": ["string"]
-            },
-            "pattern": {
-              "type": "string",
-              "format": "regex"
-            },
-            "example": {
-              "type": "string"
-            },
-            "default": {
-              "type": "string"
-            },
-            "enum": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        {
-          "required": [
-            "type"
-          ],
-          "properties": {
-            "type": {
-              "enum": ["number"]
-            },
-            "example": {
-              "type": "number"
-            },
-            "default": {
-              "type": "number"
-            }
-          }
-        },
-        {
-          "required": [
-            "type"
-          ],
-          "properties": {
-            "type": {
-              "enum": ["integer"]
-            },
-            "minimum": {
-              "type": "integer"
-            },
-            "maximum": {
-              "type": "integer"
-            },
-            "example": {
-              "type": "integer"
-            },
-            "default": {
-              "type": "integer"
-            }
-          }
-        },
-        {
-          "required": [
-            "type"
-          ],
-          "properties": {
-            "type": {
-              "enum": ["date"]
-            },
-            "example": {
-              "$ref": "#/definitions/date"
-            },
-            "default": {
-              "$ref": "#/definitions/date"
-            }
-          }
-        },
-        {
-          "required": [
-            "type"
-          ],
-          "properties": {
-            "type": {
-              "enum": ["boolean"]
-            },
-            "example": {
-              "type": "boolean"
-            },
-            "default": {
-              "type": "boolean"
-            }
-          }
-        }
-      ],
       "additionalProperties": false
     },
     "mediaType": {
@@ -416,7 +319,26 @@
       "additionalProperties": false
     },
     "body": {
-      "type": "object",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/bodies"
+        },
+        {
+          "$ref": "#/definitions/responseBodies",
+          "properties": {
+            "schema": {
+              "type": "string"
+            },
+            "formParameters": {
+              "$ref": "#/definitions/namedParameters"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "bodies": {
+      "$ref": "#/definitions/responseBodies",
       "properties": {
         "application/x-www-form-urlencoded": {
           "$ref": "#/definitions/formBody"
@@ -431,12 +353,14 @@
           "$ref": "#/definitions/schemaBody"
         }
       },
+      "additionalProperties": false
+    },
+    "responseBodies": {
       "patternProperties": {
         "^[a-zA-Z0-9!#$%^&\\*_\\-\\+{}\\|'.`~]+/[a-zA-Z0-9!#$%^&\\*_\\-\\+{}\\|'.`~]+$": {
-          "$ref": "#/definitions/responseBody"
+          "$ref": "#/definitions/standardResponseBody"
         }
-      },
-      "additionalProperties": false
+      }
     },
     "formBody": {
       "$ref": "#/definitions/responseBody",
@@ -456,8 +380,12 @@
       },
       "additionalProperties": false
     },
+    "standardResponseBody": {
+      "$ref": "#/definitions/responseBody",
+      "additionalProperties": false
+    },
     "responseBody": {
-      "type": "object",
+      "type": ["null", "object"],
       "properties": {
         "example": {
           "type": "string"
@@ -489,28 +417,35 @@
       "additionalProperties": false
     },
     "securedBy": {
-      "type": "object",
-      "properties": {
-        "schemes": {
-          "type": "array",
-          "items": {
-            "type": [
-              "null",
-              "string"
-            ]
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "null"
+          },
+          {
+            "$ref": "#/definitions/reference"
           }
+        ]
+      }
+    },
+    "reference": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[\\w-]+$"
         },
-        "settings": {
+        {
           "type": "object",
+          "minProperties": 1,
+          "maxProperties": 1,
           "patternProperties": {
             "^[\\w-]+$": {
               "type": "object"
             }
-          },
-          "additionalProperties": false
+          }
         }
-      },
-      "additionalProperties": false
+      ]
     },
     "documentation": {
       "type": "array",
@@ -537,7 +472,7 @@
           "$ref": "#/definitions/is"
         },
         "type": {
-          "type": "string"
+          "$ref": "#/definitions/reference"
         }
       },
       "patternProperties": {
@@ -547,7 +482,8 @@
         "^head|get|post|put|patch|delete|options|trace|connect$": {
           "$ref": "#/definitions/method"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "resource": {
       "type": "object",
@@ -575,10 +511,21 @@
       },
       "additionalProperties": false
     },
+    "requiredMediaType": {
+      "type": "object",
+      "required": [
+        "mediaType"
+      ],
+      "properties": {
+        "mediaType": {
+          "$ref": "#/definitions/mediaType"
+        }
+      }
+    },
     "is": {
       "$ref": "#/definitions/enum",
       "items": {
-        "type": "string"
+        "$ref": "#/definitions/reference"
       }
     },
     "enum": {
@@ -600,12 +547,16 @@
         }
       ]
     },
+    "booleanDefaultFalse": {
+      "type": "boolean",
+      "default": false
+    },
     "date": {
       "type": "string",
       "pattern": "^(Sun|Mon|Tue|Wed|Thu|Fri|Sat), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$"
     },
     "primitiveType": {
-      "type": ["boolean", "integer", "null", "number", "string"]
+      "type": ["boolean", "integer", "number", "string"]
     }
   },
   "additionalProperties": false
