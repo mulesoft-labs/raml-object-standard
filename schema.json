@@ -268,6 +268,9 @@
     "describedBy": {
       "type": "object",
       "properties": {
+        "description": {
+          "type": "string"
+        },
         "queryParameters": {
           "$ref": "#/definitions/namedParameters"
         },
@@ -280,15 +283,32 @@
         "body": {
           "$ref": "#/definitions/body"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "trait": {
-      "$ref": "#/definitions/describedBy",
+      "type": "object",
       "properties": {
+        "description": {
+          "type": "string"
+        },
+        "queryParameters": {
+          "$ref": "#/definitions/namedParameters"
+        },
+        "headers": {
+          "$ref": "#/definitions/namedParameters"
+        },
+        "responses": {
+          "$ref": "#/definitions/responses"
+        },
+        "body": {
+          "$ref": "#/definitions/body"
+        },
         "securedBy": {
           "$ref": "#/definitions/securedBy"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "resourceTypes": {
       "type": "object",
@@ -316,27 +336,14 @@
       "additionalProperties": false
     },
     "body": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/bodies"
-        },
-        {
-          "$ref": "#/definitions/responseBodies",
-          "properties": {
-            "schema": {
-              "type": "string"
-            },
-            "formParameters": {
-              "$ref": "#/definitions/namedParameters"
-            }
-          },
-          "additionalProperties": false
-        }
-      ]
-    },
-    "bodies": {
-      "$ref": "#/definitions/responseBodies",
+      "type": "object",
       "properties": {
+        "schema": {
+          "type": "string"
+        },
+        "formParameters": {
+          "$ref": "#/definitions/namedParameters"
+        },
         "application/x-www-form-urlencoded": {
           "$ref": "#/definitions/formBody"
         },
@@ -350,14 +357,12 @@
           "$ref": "#/definitions/schemaBody"
         }
       },
-      "additionalProperties": false
-    },
-    "responseBodies": {
       "patternProperties": {
         "^[a-zA-Z0-9!#$%^&\\*_\\-\\+{}\\|'.`~]+/[a-zA-Z0-9!#$%^&\\*_\\-\\+{}\\|'.`~]+$": {
           "$ref": "#/definitions/standardResponseBody"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "formBody": {
       "$ref": "#/definitions/responseBody",
@@ -492,8 +497,26 @@
       "additionalProperties": false
     },
     "method": {
-      "$ref": "#/definitions/trait",
+      "type": "object",
       "properties": {
+        "description": {
+          "type": "string"
+        },
+        "queryParameters": {
+          "$ref": "#/definitions/namedParameters"
+        },
+        "headers": {
+          "$ref": "#/definitions/namedParameters"
+        },
+        "responses": {
+          "$ref": "#/definitions/responses"
+        },
+        "body": {
+          "$ref": "#/definitions/body"
+        },
+        "securedBy": {
+          "$ref": "#/definitions/securedBy"
+        },
         "is": {
           "$ref": "#/definitions/is"
         }

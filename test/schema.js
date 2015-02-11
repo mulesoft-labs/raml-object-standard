@@ -15,6 +15,7 @@ describe('json schema', function () {
               }
             },
             get: {
+              is: ['paged'],
               description: 'Get all the users',
               queryParameters: {
                 sort: {
@@ -133,6 +134,42 @@ describe('json schema', function () {
     })
   })
 
+  describe('traits', function () {
+    it('should validate traits', function () {
+      var result = validate({
+        title: 'Example',
+        traits: {
+          paged: {
+            queryParameters: {
+              limit: {
+                type: 'number'
+              },
+              offset: {
+                type: 'number'
+              }
+            },
+            securedBy: ['oauth_2_0']
+          }
+        }
+      })
+
+      expect(result.valid).to.be.true
+    })
+
+    it('should invalidate unknown trait properties', function () {
+      var result = validate({
+        title: 'Example',
+        traits: {
+          paged: {
+            unknown: true
+          }
+        }
+      })
+
+      expect(result.valid).to.be.false
+    })
+  })
+
   describe('responses', function () {
     it('should accept null response bodies', function () {
       var result = validate({
@@ -165,7 +202,12 @@ describe('json schema', function () {
               responses: {
                 '200': {
                   body: {
-                    schema: '...'
+                    schema: '...',
+                    'text/xml': {
+                      body: {
+                        schema: '...'
+                      }
+                    }
                   }
                 }
               }
@@ -177,7 +219,7 @@ describe('json schema', function () {
       expect(result.valid).to.be.true
     })
 
-    it('should invalidate invalid media types', function () {
+    it('should invalidate invalid response parameters', function () {
       var result = validate({
         title: 'Example',
         resources: {
@@ -186,6 +228,27 @@ describe('json schema', function () {
               responses: {
                 '200': {
                   unknown: null
+                }
+              }
+            }
+          }
+        }
+      })
+
+      expect(result.valid).to.be.false
+    })
+
+    it('should invalidate invalid media types', function () {
+      var result = validate({
+        title: 'Example',
+        resources: {
+          '/': {
+            get: {
+              responses: {
+                '200': {
+                  body: {
+                    unknown: null
+                  }
                 }
               }
             }
