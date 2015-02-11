@@ -250,23 +250,7 @@ function sanitizeBody (body) {
 }
 
 function sanitizeSecuredBy (securedBy) {
-  var obj = {
-    schemes: [],
-    settings: {}
-  }
-
-  securedBy.forEach(function (scheme) {
-    if (typeof scheme === 'object') {
-      return Object.keys(scheme).forEach(function (key) {
-        obj.schemes.push(key)
-        obj.settings[key] = extend(true, {}, scheme[key])
-      })
-    }
-
-    obj.schemes.push(scheme)
-  })
-
-  return obj
+  return extend(true, [], securedBy)
 }
 
 function pluck (src, keys) {

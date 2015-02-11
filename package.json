@@ -10,8 +10,8 @@
   ],
   "scripts": {
     "lint": "standard",
-    "test-std": "mocha test/**/*.js -R spec --bail",
-    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha test/**/*.js -- -R spec --bail",
+    "test-std": "mocha test/*.js -R spec --bail",
+    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha test/*.js -- -R spec --bail",
     "test": "npm run lint && npm run test-cov"
   },
   "standard": {
@@ -44,7 +44,7 @@
     "pre-commit": "^1.0.1",
     "raml-parser": "^0.8.10",
     "standard": "^2.1.1",
-    "tv4": "^1.1.9"
+    "z-schema": "^3.4.3"
   },
   "dependencies": {
     "extend": "^2.0.0"
