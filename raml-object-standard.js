@@ -83,37 +83,37 @@ RamlObject.prototype.getResourceParameters = function (path) {
   return resource && resource.absoluteUriParameters
 }
 
-RamlObject.prototype.getMethodHeaders = function (path, method) {
+RamlObject.prototype.getMethodHeaders = function (path, verb) {
   var resource = this._resources[path]
-  var method = resource && resource[method]
+  var method = resource && resource.methods[verb]
 
   return method && method.headers
 }
 
-RamlObject.prototype.getMethodQuery = function (path, method) {
+RamlObject.prototype.getMethodQuery = function (path, verb) {
   var resource = this._resources[path]
-  var method = resource && resource[method]
+  var method = resource && resource.methods[verb]
 
   return method && method.query
 }
 
-RamlObject.prototype.getMethodBody = function (path, method) {
+RamlObject.prototype.getMethodBody = function (path, verb) {
   var resource = this._resources[path]
-  var method = resource && resource[method]
+  var method = resource && resource.methods[verb]
 
   return method && method.body
 }
 
-RamlObject.prototype.getMethodResponseCodes = function (path, method) {
+RamlObject.prototype.getMethodResponseCodes = function (path, verb) {
   var resource = this._resources[path]
-  var method = resource && resource[method]
+  var method = resource && resource.methods[verb]
 
   return method && method.responses && Object.keys(method.responses)
 }
 
-RamlObject.prototype.getMethodResponse = function (path, method, code) {
+RamlObject.prototype.getMethodResponse = function (path, verb, code) {
   var resource = this._resources[path]
-  var method = resource && resource[method]
+  var method = resource && resource.methods[verb]
 
   return method && method.responses && method.responses[code]
 }

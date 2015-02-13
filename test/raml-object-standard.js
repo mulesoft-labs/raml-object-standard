@@ -50,6 +50,25 @@ describe('raml object', function () {
         type: 'collection',
         '/{userId}': {
           get: null
+        },
+        post: {
+          description: '...',
+          body: {
+            'application/json': {
+              schema: '...',
+              example: '...'
+            }
+          },
+          responses: {
+            '201': {
+              body: {
+                'application/json': {
+                  schema: '...',
+                  example: '...'
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -129,6 +148,10 @@ describe('raml object', function () {
 
     it('should get resource uri parameters', function () {
       expect(instance.getResourceParameters('/users/{userId}')).to.an('object')
+    })
+
+    it('should get a resource body', function () {
+      expect(instance.getMethodBody('/users', 'post')).to.be.an('object')
     })
   })
 })
