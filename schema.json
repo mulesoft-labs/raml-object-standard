@@ -240,7 +240,6 @@
               "oneOf": [
                 {
                   "enum": [
-                    "Anonymous",
                     "Basic Authentication",
                     "Digest Authentication"
                   ]

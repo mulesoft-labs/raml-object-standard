@@ -302,7 +302,7 @@ function sanitizeSecuredBy (securedBy, securitySchemes) {
 
   securedBy.forEach(function (name) {
     if (name == null) {
-      map['null'] = { type: 'Anonymous' }
+      map['null'] = null
 
       return
     }
