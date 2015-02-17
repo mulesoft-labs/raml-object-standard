@@ -272,6 +272,10 @@ function createBaseUriParameters (raml) {
 function sanitizeSecuredBy (securedBy, securitySchemes) {
   var map = {}
 
+  if (!securedBy) {
+    return map
+  }
+
   securedBy.forEach(function (name) {
     if (name == null) {
       map['null'] = { type: 'Anonymous' }
