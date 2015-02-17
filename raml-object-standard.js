@@ -259,12 +259,15 @@ function createResourceMap (raml, options) {
 }
 
 function createBaseUriParameters (raml) {
-  var params = parameters(raml.baseUri, raml.baseUriParameters)
+  var params = parameters(raml.baseUri || '', raml.baseUriParameters)
 
-  params.version = extend({
-    type: 'string',
-    default: raml.version
-  }, params.version)
+  // Extend a default value.
+  if (params.version) {
+    params.version = extend({
+      type: 'string',
+      default: raml.version
+    }, params.version)
+  }
 
   return params
 }
