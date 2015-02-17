@@ -3,82 +3,82 @@ var expect = require('chai').expect
 var RamlObject = require('..')
 
 describe('raml object', function () {
-  var instance = new RamlObject({
-    title: 'Example API',
-    version: '1.0',
-    baseUri: 'http://{version}.example.com',
-    documentation: [{
-      title: 'Hello World',
-      content: 'This is my API'
-    }],
-    protocols: ['HTTP'],
-    securitySchemes: {
-      'oauth_2_0': {
-        type: 'OAuth 2.0',
-        describedBy: {
-          headers: {
-            Authorization: null
-          }
-        }
-      }
-    },
-    securedBy: ['oauth_2_0'],
-    resourceTypes: {
-      collection: {
-        get: {
-          is: ['paged']
-        }
-      }
-    },
-    traits: {
-      paged: {
-        queryParameters: {
-          limit: {
-            type: 'number',
-            minimum: 1,
-            maximum: 50,
-            default: 20
-          },
-          offset: {
-            type: 'number'
-          }
-        }
-      }
-    },
-    resources: {
-      '/users': {
-        type: 'collection',
-        '/{userId}': {
-          get: null
-        },
-        post: {
-          description: '...',
-          body: {
-            'application/json': {
-              schema: '...',
-              example: '...'
+  it('should create a new instance', function () {
+    expect(new RamlObject({})).to.be.an.instanceOf(RamlObject)
+  })
+
+  describe('basic properties', function () {
+    var instance = new RamlObject({
+      title: 'Example API',
+      version: '1.0',
+      baseUri: 'http://{version}.example.com',
+      documentation: [{
+        title: 'Hello World',
+        content: 'This is my API'
+      }],
+      protocols: ['HTTP'],
+      securitySchemes: {
+        'oauth_2_0': {
+          type: 'OAuth 2.0',
+          describedBy: {
+            headers: {
+              Authorization: null
             }
+          }
+        }
+      },
+      securedBy: ['oauth_2_0'],
+      resourceTypes: {
+        collection: {
+          get: {
+            is: ['paged']
+          }
+        }
+      },
+      traits: {
+        paged: {
+          queryParameters: {
+            limit: {
+              type: 'number',
+              minimum: 1,
+              maximum: 50,
+              default: 20
+            },
+            offset: {
+              type: 'number'
+            }
+          }
+        }
+      },
+      resources: {
+        '/users': {
+          type: 'collection',
+          '/{userId}': {
+            get: null
           },
-          responses: {
-            '201': {
-              body: {
-                'application/json': {
-                  schema: '...',
-                  example: '...'
+          post: {
+            description: '...',
+            body: {
+              'application/json': {
+                schema: '...',
+                example: '...'
+              }
+            },
+            responses: {
+              '201': {
+                body: {
+                  'application/json': {
+                    schema: '...',
+                    example: '...'
+                  }
                 }
               }
             }
           }
         }
       }
-    }
-  })
+    })
 
-  it('should create a new instance', function () {
-    expect(instance).to.be.an.instanceOf(RamlObject)
-  })
-
-  describe('basic properties', function () {
     it('should get title', function () {
       expect(instance.getTitle()).to.be.a('string')
     })
@@ -152,6 +152,41 @@ describe('raml object', function () {
 
     it('should get a resource body', function () {
       expect(instance.getMethodBody('/users', 'post')).to.be.an('object')
+    })
+  })
+
+  describe('media type extension', function () {
+    it('should expand media type extension with media type', function () {
+      expect(new RamlObject({
+        mediaType: 'application/json',
+        resources: {
+          '/api{mediaTypeExtension}': {
+            get: null
+          }
+        }
+      }).getResources()).to.deep.equal([
+        '/',
+        '/api.json'
+      ])
+    })
+
+    it('should expand media type extension with enum', function () {
+      expect(new RamlObject({
+        resources: {
+          '/api{mediaTypeExtension}': {
+            uriParameters: {
+              mediaTypeExtension: {
+                enum: ['.json', '.xml']
+              }
+            },
+            get: null
+          }
+        }
+      }).getResources()).to.deep.equal([
+        '/',
+        '/api.json',
+        '/api.xml'
+      ])
     })
   })
 })

@@ -7,6 +7,11 @@ var DEFAULT_OPTIONS = {
   splitUri: /(?=\/)/
 }
 
+var MEDIA_TYPE_TO_EXT = {
+  'application/json': 'json',
+  'text/xml': 'xml'
+}
+
 var TEMPLATE_REGEXP = /\{[^\{\}]+\}/g
 
 function RamlObject (raml, options) {
@@ -173,20 +178,36 @@ function createResourceMap (raml, options) {
 
   function recursiveExtractPaths (obj, parts, resource) {
     var part = parts[0]
-    var params = resource.uriParameters
+    var params = resource && resource.uriParameters || {}
 
     if (/\{mediaTypeExtension\}$/.test(part)) {
-      if (Array.isArray(params.mediaTypeExtension.enum)) {
-        params.mediaTypeExtension.enum.forEach(function (mediaTypeExtension) {
-          var extension = '.' + mediaTypeExtension.replace(/^\./, '')
-          var pathName = part.replace(/\{mediaTypeExtension\}$/, extension)
-          var pathParts = [pathName].concat(part.slice(1))
+      var extensions = []
 
-          return recursiveExtractPaths(obj, pathParts)
+      // Support enum media type array, or fall back to "mediaType".
+      if (params.mediaTypeExtension && Array.isArray(params.mediaTypeExtension.enum)) {
+        params.mediaTypeExtension.enum.forEach(function (mediaTypeExtension) {
+          var extension = mediaTypeExtension.replace(/^\./, '')
+          var hasExtension = extensions.indexOf(extension) > -1
+
+          if (!hasExtension) {
+            extensions.push(extension)
+          }
         })
+      } else if (raml.mediaType && MEDIA_TYPE_TO_EXT[raml.mediaType]) {
+        extensions.push(MEDIA_TYPE_TO_EXT[raml.mediaType])
       }
 
-      part = part.slice(0, -20) + '.{mediaTypeExtension}'
+      // If extensions exist, use those instead over the parameter.
+      if (extensions.length) {
+        extensions.forEach(function (extension) {
+          var pathName = part.replace(/\{mediaTypeExtension\}$/, '.' + extension)
+          var pathParts = [pathName].concat(parts.slice(1))
+
+          return recursiveExtractPaths(obj, pathParts, resource)
+        })
+
+        return
+      }
     }
 
     if (part !== '/') {
