@@ -5,6 +5,7 @@
   "main": "raml-object-standard.js",
   "files": [
     "schema.json",
+    "raml-object-standard.js",
     "bin/",
     "transform/",
     "LICENSE"
