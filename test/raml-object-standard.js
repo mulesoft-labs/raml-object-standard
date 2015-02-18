@@ -54,7 +54,14 @@ describe('raml object', function () {
         '/users': {
           type: 'collection',
           '/{userId}': {
-            get: null
+            get: {
+              queryParameters: {
+                full: {
+                  type: 'boolean',
+                  default: false
+                }
+              }
+            }
           },
           post: {
             description: '...',
@@ -152,6 +159,12 @@ describe('raml object', function () {
 
     it('should get a resource body', function () {
       expect(instance.getMethodBody('/users', 'post')).to.be.an('object')
+    })
+
+    it('should get query parameters', function () {
+      var query = instance.getMethodQueryParameters('/users/{userId}', 'get')
+
+      expect(query).to.be.an('object').and.have.keys(['full'])
     })
   })
 

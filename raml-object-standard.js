@@ -95,11 +95,11 @@ RamlObject.prototype.getMethodHeaders = function (path, verb) {
   return method && method.headers
 }
 
-RamlObject.prototype.getMethodQuery = function (path, verb) {
+RamlObject.prototype.getMethodQueryParameters = function (path, verb) {
   var resource = this._resources[path]
   var method = resource && resource.methods[verb]
 
-  return method && method.query
+  return method && method.queryParameters
 }
 
 RamlObject.prototype.getMethodBody = function (path, verb) {
