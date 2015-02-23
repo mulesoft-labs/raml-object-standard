@@ -2,11 +2,11 @@
   "name": "raml-object-standard",
   "version": "0.0.7",
   "homepage": "https://github.com/mulesoft-labs/raml-object-standard",
-  "main": "raml-object-standard.js",
+  "main": "schema.json",
   "authors": [
     "MuleSoft, Inc."
   ],
-  "description": "A standardized RAML object representation using JSON",
+  "description": "A standardized RAML object representation using JSON schema",
   "keywords": [
     "raml",
     "object",
