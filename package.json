@@ -1,6 +1,6 @@
 {
   "name": "raml-object-standard",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A standardized RAML object representation using JSON schema",
   "main": "schema.json",
   "files": [

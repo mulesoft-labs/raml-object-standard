@@ -1,6 +1,6 @@
 {
   "name": "raml-object-standard",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "homepage": "https://github.com/mulesoft-labs/raml-object-standard",
   "main": "schema.json",
   "authors": [
