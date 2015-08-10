@@ -497,7 +497,7 @@
     "rootResource": {
       "type": "object",
       "patternProperties": {
-        "^\\/": {
+        "^/": {
           "$ref": "#/definitions/resource"
         }
       },
@@ -528,7 +528,7 @@
         "^(?:head|get|post|put|patch|delete|options|trace|connect)$": {
           "$ref": "#/definitions/method"
         },
-        "^\\/": {
+        "^/": {
           "$ref": "#/definitions/resource"
         }
       },
